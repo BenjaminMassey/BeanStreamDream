@@ -2,6 +2,9 @@
 from cryptography.fernet import Fernet
 import os
 
+# --- FOR BSD ---
+needToConfig = False
+
 # --- FILE HANDLING ---
 
 data_dir = "./data/"
@@ -15,8 +18,15 @@ if not os.path.isdir(data_dir):
    
 for path in [chat_path, bot_path, oauth_path]:
     if not os.path.isfile(path):
+        needToConfig = True
         file = open(path, 'w')
         file.close()
+    else:
+        file = open(path, 'r')
+        text = file.read()
+        file.close()
+        if len(text) == 0:
+            needToConfig = True
         
 key = None
 
@@ -27,6 +37,7 @@ if os.path.isfile(key_path):
     key = file.read()
     file.close
 else:
+    needToConfig = True
     key = Fernet.generate_key()
     file = open(key_path, 'w')
     file.write(key.decode("utf-8"))

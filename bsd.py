@@ -2,10 +2,14 @@
 from PyQt6.QtWidgets import *
 
 # --- PROJECT FILES ---
+import util
+import data
 import config
+import menu
 
 # --- MAIN SECTION ---
 
-config.window.show()
-
-config.app.exec()
+if data.needToConfig:
+    util.showWindow(config)
+else:
+    util.showWindow(menu)

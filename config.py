@@ -2,6 +2,7 @@
 from PyQt6.QtWidgets import *
 
 # --- PROJECT FILES ---
+import util
 import data
 
 # --- INITIALIZATION ---
@@ -94,6 +95,12 @@ layout.addWidget(temp, 3, 1)
 
 close_button = QPushButton("Close")
 layout.addWidget(close_button, 4, 1)
+
+def doClose():
+    global window
+    import menu
+    util.showWindow(menu, window)
+close_button.clicked.connect(doClose)
 
 # --- FINALIZATION ---
 
