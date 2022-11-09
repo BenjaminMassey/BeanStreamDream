@@ -23,8 +23,16 @@ def doConfig():
     util.showWindow(config, window)
 config_button.clicked.connect(doConfig)
     
+count_button = QPushButton("Count Mode")
+layout.addWidget(count_button, 1, 0)
+def doCount():
+    global window
+    import count
+    util.showWindow(count, window)
+count_button.clicked.connect(doCount)
+    
 match_button = QPushButton("Match Mode")
-layout.addWidget(match_button, 1, 0)
+layout.addWidget(match_button, 2, 0)
 def doMatch():
     global window
     import match
