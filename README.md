@@ -2,7 +2,7 @@
 
 ## About
 
-An assistant program for running a Twitch stream. Inspired by previous project [SpeedrunStocks](https://www.speedrunstocks.com/) with the dream of being a <b>complete</b> tool, regardless of stream activity.
+An assistant program for running a Twitch stream. Inspired by previous project [BeanBoyBot](https://github.com/BenjaminMassey/BeanBoyBot) with the dream of being a <b>complete</b> tool, regardless of stream activity.
 
 ## Dependencies
 
