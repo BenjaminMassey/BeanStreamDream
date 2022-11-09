@@ -139,3 +139,7 @@ class Match(QWidget):
     
     def setClose(self, func):
         self.close_button.clicked.connect(func)
+        
+    def show(self):
+        super(Match, self).show()
+        self.pushToHTML()

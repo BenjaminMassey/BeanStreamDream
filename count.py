@@ -79,3 +79,7 @@ class Count(QWidget):
         
     def setClose(self, func):
         self.close_button.clicked.connect(func)
+        
+    def show(self):
+        super(Count, self).show()
+        self.pushToHTML()
