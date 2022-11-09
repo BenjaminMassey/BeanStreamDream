@@ -1,46 +1,34 @@
 # --- LIBRARIES ---
 from PyQt6.QtWidgets import *
+import threading
 
 # --- PROJECT FILES ---
-import util
+import data
+import twitch
 
 # --- INITIALIZATION ---
 
-app = QApplication([])
+class Menu(QWidget):
+    def __init__(self, parent=None):
+        super(Menu, self).__init__(parent)
+        self.layout = QGridLayout()
 
-window = QWidget()
+        # --- BUTTONS ---
 
-layout = QGridLayout()
+        self.config_button = QPushButton("Redo Config")
+        self.layout.addWidget(self.config_button, 0, 0)\
+            
+        self.count_button = QPushButton("Count Mode")
+        self.layout.addWidget(self.count_button, 1, 0)
+            
+        self.match_button = QPushButton("Match Mode")
+        self.layout.addWidget(self.match_button, 2, 0)
 
-# --- BUTTONS ---
+        # --- FINALIZATION ---
 
-config_button = QPushButton("Redo Config")
-layout.addWidget(config_button, 0, 0)
+        self.setWindowTitle("BSD Menu")
 
-def doConfig():
-    global window
-    import config
-    util.showWindow(config, window)
-config_button.clicked.connect(doConfig)
+        self.setLayout(self.layout)
     
-count_button = QPushButton("Count Mode")
-layout.addWidget(count_button, 1, 0)
-def doCount():
-    global window
-    import count
-    util.showWindow(count, window)
-count_button.clicked.connect(doCount)
-    
-match_button = QPushButton("Match Mode")
-layout.addWidget(match_button, 2, 0)
-def doMatch():
-    global window
-    import match
-    util.showWindow(match, window)
-match_button.clicked.connect(doMatch)
-
-# --- FINALIZATION ---
-
-window.setWindowTitle("BSD Menu")
-
-window.setLayout(layout)
+    def setButtonFunc(self, button, func):
+        button.clicked.connect(func)

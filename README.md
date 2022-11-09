@@ -11,6 +11,8 @@ Written with Python v3.9.6.
 For pip install x:
 - cryptography
 - pyqt6
+- twitchio
+- threading
 
 ## Contact
 

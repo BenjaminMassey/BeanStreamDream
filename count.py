@@ -1,98 +1,81 @@
 # --- LIBRARIES ---
 from PyQt6.QtWidgets import *
 
-# --- PROJECT FILES ---
-import util
-
-# --- INITIALIZATION ---
-
-app = QApplication([])
-
-window = QWidget()
-
-layout = QGridLayout()
-
-# --- GLOBALS ---
-
-counting = "Deaths:"
-counter = 0
-
-base_html_file = open("./html/count.html", 'r')
-base_html = base_html_file.read()
-base_html_file.close()
-
-# --- FUNCTIONS ---
-
-def pushToHTML():
-    global counting, counter, base_html
-    html = base_html
-    html = html.replace("{{COUNTING}}", counting)
-    html = html.replace("{{COUNTER}}", str(counter))
-    file = open("./output.html", 'w')
-    file.write(html)
-    file.close()
-
-def changeCounting(text):
-    global counting
-    counting = text
-    pushToHTML()
-
-def changeCounter(num):
-    global counter, counter_entry
-    counter += num
-    counter_entry.setText(str(counter))
-    pushToHTML()
+class Count(QWidget):
+    def __init__(self, parent=None):
+        super(Count, self).__init__(parent)
     
-def setCounter(text):
-    global counter
-    try:
-        counter = int(text)
-    except:
-        global counter_entry
-        counter_entry.setText(str(counter))
-    pushToHTML()
+        self.layout = QGridLayout()
 
-# --- ACTUAL GUI ---
+        self.counting = "Deaths:"
+        self.counter = 0
 
-counting_entry = QLineEdit(counting)
-layout.addWidget(counting_entry, 0, 0)
-counting_entry.textChanged[str].connect(changeCounting)
+        base_html_file = open("./html/count.html", 'r')
+        self.base_html = base_html_file.read()
+        base_html_file.close()
 
-counter_minus_button = QPushButton("-")
-layout.addWidget(counter_minus_button, 1, 0)
-counter_minus_button.clicked.connect(
-    lambda: changeCounter(-1)
-)
+        # --- ACTUAL GUI ---
 
-counter_entry = QLineEdit(str(counter))
-layout.addWidget(counter_entry, 1, 1)
-counter_entry.textChanged[str].connect(setCounter)
+        self.counting_entry = QLineEdit(self.counting)
+        self.layout.addWidget(self.counting_entry, 0, 0)
+        self.counting_entry.textChanged[str].connect(self.changeCounting)
 
-counter_plus_button = QPushButton("+")
-layout.addWidget(counter_plus_button, 1, 2)
-counter_plus_button.clicked.connect(
-    lambda: changeCounter(1)
-)
+        self.counter_minus_button = QPushButton("-")
+        self.layout.addWidget(self.counter_minus_button, 1, 0)
+        self.counter_minus_button.clicked.connect(
+            lambda: self.changeCounter(-1)
+        )
 
-# --- CLOSE ---
+        self.counter_entry = QLineEdit(str(self.counter))
+        self.layout.addWidget(self.counter_entry, 1, 1)
+        self.counter_entry.textChanged[str].connect(self.setCounter)
 
-layout.addWidget(QLabel(), 2, 0) # spacer
+        self.counter_plus_button = QPushButton("+")
+        self.layout.addWidget(self.counter_plus_button, 1, 2)
+        self.counter_plus_button.clicked.connect(
+            lambda: self.changeCounter(1)
+        )
 
-close_button = QPushButton("Close")
-layout.addWidget(close_button, 3, 1)
+        # --- CLOSE ---
 
-def doClose():
-    global window
-    import menu
-    util.showWindow(menu, window)
-close_button.clicked.connect(doClose)
+        self.layout.addWidget(QLabel(), 2, 0) # spacer
 
-# --- INIT THE HTML ---
+        self.close_button = QPushButton("Close")
+        self.layout.addWidget(self.close_button, 3, 1)
 
-pushToHTML()
+        # --- INIT THE HTML ---
 
-# --- FINALIZATION ---
+        self.pushToHTML()
 
-window.setWindowTitle("BSD Match")
+        # --- FINALIZATION ---
 
-window.setLayout(layout)
+        self.setWindowTitle("BSD Match")
+
+        self.setLayout(self.layout)
+        
+    def pushToHTML(self):
+        html = self.base_html
+        html = html.replace("{{COUNTING}}", self.counting)
+        html = html.replace("{{COUNTER}}", str(self.counter))
+        file = open("./output.html", 'w')
+        file.write(html)
+        file.close()
+
+    def changeCounting(self, text):
+        self.counting = text
+        self.pushToHTML()
+
+    def changeCounter(self, num):
+        self.counter += num
+        self.counter_entry.setText(str(self.counter))
+        self.pushToHTML()
+        
+    def setCounter(self, text):
+        try:
+            self.counter = int(text)
+        except:
+            self.counter_entry.setText(str(self.counter))
+        self.pushToHTML()
+        
+    def setClose(self, func):
+        self.close_button.clicked.connect(func)

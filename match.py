@@ -1,161 +1,141 @@
 # --- LIBRARIES ---
 from PyQt6.QtWidgets import *
 
-# --- PROJECT FILES ---
-import util
+class Match(QWidget):
+    def __init__(self, parent=None):
+        super(Match, self).__init__(parent)
+        
+        self.layout = QGridLayout()
+        
+        self.title = "MATCH"
+        self.first_score = 0
+        self.second_score = 0
+        self.first_name = "Player A"
+        self.second_name = "Player B"
 
-# --- INITIALIZATION ---
+        base_html_file = open("./html/match.html", 'r')
+        self.base_html = base_html_file.read()
+        base_html_file.close()
+        
+        # --- ACTUAL GUI ---
 
-app = QApplication([])
+        self.title_label = QLabel("Title:")
+        self.layout.addWidget(self.title_label, 0, 0)
 
-window = QWidget()
+        self.title_entry = QLineEdit(self.title)
+        self.layout.addWidget(self.title_entry, 0, 1)
+        self.title_entry.textChanged[str].connect(self.tef)
 
-layout = QGridLayout()
+        self.layout.addWidget(QLabel(), 1, 0) # spacer
 
-# --- GLOBALS ---
+        self.first_name_entry = QLineEdit(self.first_name)
+        self.layout.addWidget(self.first_name_entry, 2, 0)
+        self.first_name_entry.textChanged[str].connect(self.fnef)
 
-title = "MATCH"
-first_score = 0
-second_score = 0
-first_name = "Player A"
-second_name = "Player B"
+        self.first_minus_button = QPushButton("-")
+        self.layout.addWidget(self.first_minus_button, 2, 1)
+        self.first_minus_button.clicked.connect(
+            lambda: self.changeFirstScore(-1)
+        )
 
-base_html_file = open("./html/match.html", 'r')
-base_html = base_html_file.read()
-base_html_file.close()
+        self.first_score_entry = QLineEdit(str(self.first_score))
+        self.layout.addWidget(self.first_score_entry, 2, 2)
+        self.first_score_entry.textChanged[str].connect(self.fsef)
 
-# --- FUNCTIONS ---
+        self.first_plus_button = QPushButton("+")
+        self.layout.addWidget(self.first_plus_button, 2, 3)
+        self.first_plus_button.clicked.connect(
+            lambda: self.changeFirstScore(1)
+        )
 
-def pushToHTML():
-    global title, first_score, second_score, first_name, second_name, base_html
-    html = base_html
-    html = html.replace("{{TITLE}}", title)
-    html = html.replace("{{FIRST_SCORE}}", str(first_score))
-    html = html.replace("{{SECOND_SCORE}}", str(second_score))
-    html = html.replace("{{FIRST_NAME}}", first_name)
-    html = html.replace("{{SECOND_NAME}}", second_name)
-    file = open("./output.html", 'w')
-    file.write(html)
-    file.close()
+        self.second_name_entry = QLineEdit(self.second_name)
+        self.layout.addWidget(self.second_name_entry, 3, 0)
+        self.second_name_entry.textChanged[str].connect(self.snef)
+
+        self.second_minus_button = QPushButton("-")
+        self.layout.addWidget(self.second_minus_button, 3, 1)
+        self.second_minus_button.clicked.connect(
+            lambda: self.changeSecondScore(-1)
+        )
+
+        self.second_score_entry = QLineEdit(str(self.second_score))
+        self.layout.addWidget(self.second_score_entry, 3, 2)
+        self.second_score_entry.textChanged[str].connect(self.ssef)
+
+        self.second_plus_button = QPushButton("+")
+        self.layout.addWidget(self.second_plus_button, 3, 3)
+        self.second_plus_button.clicked.connect(
+            lambda: self.changeSecondScore(1)
+        )
+
+        # --- CLOSE ---
+
+        self.layout.addWidget(QLabel(), 4, 2) # spacer
+
+        self.close_button = QPushButton("Close")
+        self.layout.addWidget(self.close_button, 5, 2)
+
+        # --- INIT THE HTML ---
+
+        self.pushToHTML()
+
+        # --- FINALIZATION ---
+
+        self.setWindowTitle("BSD Match")
+
+        self.setLayout(self.layout)
+        
+    # --- FUNCTIONS ---
+
+    def pushToHTML(self):
+        html = self.base_html
+        html = html.replace("{{TITLE}}", self.title)
+        html = html.replace("{{FIRST_SCORE}}", str(self.first_score))
+        html = html.replace("{{SECOND_SCORE}}", str(self.second_score))
+        html = html.replace("{{FIRST_NAME}}", self.first_name)
+        html = html.replace("{{SECOND_NAME}}", self.second_name)
+        file = open("./output.html", 'w')
+        file.write(html)
+        file.close()
+        
+    # --- ANNOYING GUI FUNCTIONS ---
+
+    def changeFirstScore(self, num):
+        self.first_score += num
+        self.first_score_entry.setText(str(self.first_score))
+        self.pushToHTML()
+
+    def changeSecondScore(self, num):
+        self.second_score += num
+        self.second_score_entry.setText(str(self.second_score))
+        self.pushToHTML()
+
+    # title entry function, infer the nexts
+    def tef(self, text):
+        self.title = text
+        self.pushToHTML()
+
+    def fnef(self, text):
+        self.first_name = text
+        self.pushToHTML()
+
+    def fsef(self, text):
+        try:
+            self.first_score = int(text)
+        except:
+            self.first_score_entry.setText(str(self.first_score))
+        self.pushToHTML()
+
+    def snef(self, text):
+        self.second_name = text
+        self.pushToHTML()
+
+    def ssef(self, text):
+        try:
+            self.second_score = int(text)
+        except:
+            self.second_score_entry.setText(str(self.second_score))
+        self.pushToHTML()
     
-# --- ANNOYING GUI FUNCTIONS ---
-
-def changeFirstScore(num):
-    global first_score, first_score_entry
-    first_score += num
-    first_score_entry.setText(str(first_score))
-    pushToHTML()
-
-def changeSecondScore(num):
-    global second_score, second_score_entry
-    second_score += num
-    second_score_entry.setText(str(second_score))
-    pushToHTML()
-
-# title entry function, infer the nexts
-def tef(text):
-    global title
-    title = text
-    pushToHTML()
-
-def fnef(text):
-    global first_name
-    first_name = text
-    pushToHTML()
-
-def fsef(text):
-    global first_score
-    try:
-        first_score = int(text)
-    except:
-        global first_score_entry
-        first_score_entry.setText(str(first_score))
-    pushToHTML()
-
-def snef(text):
-    global second_name
-    second_name = text
-    pushToHTML()
-
-def ssef(text):
-    global second_score
-    try:
-        second_score = int(text)
-    except:
-        global second_score_entry
-        second_score_entry.setText(str(second_score))
-    pushToHTML()
-
-# --- ACTUAL GUI ---
-
-title_label = QLabel("Title:")
-layout.addWidget(title_label, 0, 0)
-
-title_entry = QLineEdit(title)
-layout.addWidget(title_entry, 0, 1)
-title_entry.textChanged[str].connect(tef)
-
-layout.addWidget(QLabel(), 1, 0) # spacer
-
-first_name_entry = QLineEdit(first_name)
-layout.addWidget(first_name_entry, 2, 0)
-first_name_entry.textChanged[str].connect(fnef)
-
-first_minus_button = QPushButton("-")
-layout.addWidget(first_minus_button, 2, 1)
-first_minus_button.clicked.connect(
-    lambda: changeFirstScore(-1)
-)
-
-first_score_entry = QLineEdit(str(first_score))
-layout.addWidget(first_score_entry, 2, 2)
-first_score_entry.textChanged[str].connect(fsef)
-
-first_plus_button = QPushButton("+")
-layout.addWidget(first_plus_button, 2, 3)
-first_plus_button.clicked.connect(
-    lambda: changeFirstScore(1)
-)
-
-second_name_entry = QLineEdit(second_name)
-layout.addWidget(second_name_entry, 3, 0)
-second_name_entry.textChanged[str].connect(snef)
-
-second_minus_button = QPushButton("-")
-layout.addWidget(second_minus_button, 3, 1)
-second_minus_button.clicked.connect(
-    lambda: changeSecondScore(-1)
-)
-
-second_score_entry = QLineEdit(str(second_score))
-layout.addWidget(second_score_entry, 3, 2)
-second_score_entry.textChanged[str].connect(ssef)
-
-second_plus_button = QPushButton("+")
-layout.addWidget(second_plus_button, 3, 3)
-second_plus_button.clicked.connect(
-    lambda: changeSecondScore(1)
-)
-
-# --- CLOSE ---
-
-layout.addWidget(QLabel(), 4, 2) # spacer
-
-close_button = QPushButton("Close")
-layout.addWidget(close_button, 5, 2)
-
-def doClose():
-    global window
-    import menu
-    util.showWindow(menu, window)
-close_button.clicked.connect(doClose)
-
-# --- INIT THE HTML ---
-
-pushToHTML()
-
-# --- FINALIZATION ---
-
-window.setWindowTitle("BSD Match")
-
-window.setLayout(layout)
+    def setClose(self, func):
+        self.close_button.clicked.connect(func)
