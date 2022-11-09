@@ -25,10 +25,11 @@ config_button.clicked.connect(doConfig)
     
 match_button = QPushButton("Match Mode")
 layout.addWidget(match_button, 1, 0)
-
-match_button.clicked.connect(
-    lambda: print("Not yet implemented")
-)
+def doMatch():
+    global window
+    import match
+    util.showWindow(match, window)
+match_button.clicked.connect(doMatch)
 
 # --- FINALIZATION ---
 
