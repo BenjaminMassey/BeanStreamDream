@@ -16,13 +16,18 @@ class Menu(QWidget):
         # --- BUTTONS ---
 
         self.config_button = QPushButton("Redo Config")
-        self.layout.addWidget(self.config_button, 0, 0)\
+        self.layout.addWidget(self.config_button, 0, 0)
+        
+        self.layout.addWidget(QLabel(), 1, 0)
             
         self.count_button = QPushButton("Count Mode")
-        self.layout.addWidget(self.count_button, 1, 0)
+        self.layout.addWidget(self.count_button, 2, 0)
             
         self.match_button = QPushButton("Match Mode")
-        self.layout.addWidget(self.match_button, 2, 0)
+        self.layout.addWidget(self.match_button, 3, 0)
+            
+        self.poll_button = QPushButton("Poll Mode")
+        self.layout.addWidget(self.poll_button, 4, 0)
 
         # --- FINALIZATION ---
 

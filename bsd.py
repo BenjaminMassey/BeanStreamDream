@@ -9,6 +9,7 @@ import config
 import menu
 import count
 import match
+import poll
 import twitch
 
 # --- TWITCH BOT ---
@@ -37,11 +38,12 @@ def showHide(shows, hides):
         h.hide()
         
 def configClose():
-    global Data, Bot
+    global Data, Bot, Poll
     Data = data.Data()
     if not Data.needToConfig:
         if Bot == None:
             doBot()
+            Poll = poll.Poll(Bot)
         else:
             print("\n\nYou will need to restart to use your new config\n\n")
         showHide([Menu], [Config])
@@ -72,5 +74,16 @@ else:
     if Bot == None:
         doBot()
     Menu.show()
+
+Poll = poll.Poll(Bot)
+Poll.setClose(lambda: showHide([Menu], [Poll]))
+
+Menu.setButtonFunc(Menu.poll_button, lambda: showHide([Poll], [Menu]))
+
+default_html = open("./html/default.html", 'r')
+output_html = open("./output.html", 'w')
+output_html.write(default_html.read())
+default_html.close()
+output_html.close()
 
 sys.exit(App.exec())

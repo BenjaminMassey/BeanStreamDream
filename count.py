@@ -49,7 +49,7 @@ class Count(QWidget):
 
         # --- FINALIZATION ---
 
-        self.setWindowTitle("BSD Match")
+        self.setWindowTitle("BSD Count")
 
         self.setLayout(self.layout)
         
